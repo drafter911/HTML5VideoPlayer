@@ -49,7 +49,6 @@
 	var $ = __webpack_require__(1);
 
 	$(document).ready(function () {
-	    var _this = this;
 
 	    var video = $('#custom-video'),
 	        container = $('#video-player'),
@@ -59,8 +58,11 @@
 	        seek = $('#seek-bar'),
 	        volume = $('#volume-bar'),
 	        volumeValue = volume.value,
-	        progressbar = $('#progress-bar'),
-	        bufferbar = $('#bufferbar');
+	        progressbar = $('#progress-bar');
+
+	    video.find('source').attr('src', 'https://media.w3.org/2010/05/sintel/trailer.mp4');
+	    video.find('source').load();
+	    video[0].play();
 
 	    if (video[0].autoplay) {
 	        playBtn.toggleClass('video-autoplay video');
@@ -68,12 +70,6 @@
 	    video.on('playing', function () {
 	        return seek.addClass('light');
 	    });
-
-	    if (video[0].muted) {
-	        muteBtn.find('.speaker-mute').removeClass('hidden');
-	    } else {
-	        muteBtn.find('.speaker-mute').addClass('hidden');
-	    }
 
 	    var togglePlayPause = function togglePlayPause() {
 	        if (video[0].paused) {
@@ -123,8 +119,10 @@
 	        if (video[0].muted) {
 	            video[0].muted = false;
 	            muteBtn.find('.speaker-mute').addClass('hidden');
+	            volume[0].value = volumeValue;
 	        } else {
 	            video[0].muted = true;
+	            volumeValue = volume[0].value;
 	            volume[0].value = 0;
 	            muteBtn.find('.speaker-mute').removeClass('hidden');
 	        }
@@ -134,7 +132,6 @@
 
 	    $(document).keyup(function (e) {
 	        if (e.keyCode == 27) {
-	            // escape key maps to keycode `27`
 	            toggleFullScreen();
 	        }
 	    });
@@ -161,22 +158,23 @@
 	        seek.val(value);
 	    });
 
-	    volume.on('change', function () {
-	        video[0].volume = _this.value;
-	        volumeValue = _this.value;
-	        if (_this.value === 0) {
+	    volume.on('change', function (e) {
+	        video[0].volume = e.target.value;
+	        volumeValue = e.target.value;
+	        if (e.target.value === 0) {
 	            video[0].muted = true;
-	            muteBtn.toggleClass('dfdfad fgfh');
-	        } else if (_this.value !== 0) {
+	            muteBtn.find('.speaker-mute').removeClass('hidden');
+	        } else if (e.target.value !== 0) {
 	            video[0].muted = false;
-	            muteBtn.toggleClass('sfdsf ffyh');
+	            muteBtn.find('.speaker-mute').addClass('hidden');
 	        }
 	    });
 
 	    video.on('ended', function () {
 	        video[0].pause();
 	        video[0].currentTime = 0;
-	        playBtn.toggleClass('sf sfd');
+	        playBtn.find('.play').removeClass('hidden');
+	        playBtn.find('.pause').addClass('hidden');
 	        seek.removeClass('sdff');
 	    });
 	});

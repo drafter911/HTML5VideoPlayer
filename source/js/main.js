@@ -10,19 +10,16 @@ $(document).ready(function () {
         seek = $('#seek-bar'),
         volume = $('#volume-bar'),
         volumeValue = volume.value,
-        progressbar = $('#progress-bar'),
-        bufferbar = $('#bufferbar');
+        progressbar = $('#progress-bar');
+
+    video.find('source').attr('src', 'https://media.w3.org/2010/05/sintel/trailer.mp4');
+    video.find('source').load();
+    video[0].play();
 
     if (video[0].autoplay) {
         playBtn.toggleClass('video-autoplay video');
     }
     video.on('playing', () => seek.addClass('light'));
-
-    if (video[0].muted) {
-        muteBtn.find('.speaker-mute').removeClass('hidden');
-    } else {
-        muteBtn.find('.speaker-mute').addClass('hidden');
-    }
 
     var togglePlayPause = () => {
         if (video[0].paused) {
@@ -78,9 +75,11 @@ $(document).ready(function () {
         if (video[0].muted) {
             video[0].muted = false;
             muteBtn.find('.speaker-mute').addClass('hidden');
+            volume[0].value = volumeValue;
         }
         else {
             video[0].muted = true;
+            volumeValue = volume[0].value;
             volume[0].value = 0;
             muteBtn.find('.speaker-mute').removeClass('hidden');
         }
@@ -89,7 +88,7 @@ $(document).ready(function () {
     fullScreenBtn.on('click', toggleFullScreen);
 
     $(document).keyup((e) => {
-        if (e.keyCode == 27) { // escape key maps to keycode `27`
+        if (e.keyCode == 27) {
             toggleFullScreen();
         }
     });
@@ -112,23 +111,24 @@ $(document).ready(function () {
         seek.val(value);
     });
 
-    volume.on('change', () => {
-        video[0].volume = this.value;
-        volumeValue = this.value;
-        if (this.value === 0) {
+    volume.on('change', (e) => {
+        video[0].volume = e.target.value;
+        volumeValue = e.target.value;
+        if (e.target.value === 0) {
             video[0].muted = true;
-            muteBtn.toggleClass('dfdfad fgfh');
+            muteBtn.find('.speaker-mute').removeClass('hidden');
         }
-        else if (this.value !== 0) {
+        else if (e.target.value !== 0) {
             video[0].muted = false;
-            muteBtn.toggleClass('sfdsf ffyh');
+            muteBtn.find('.speaker-mute').addClass('hidden');
         }
     });
 
     video.on('ended', () => {
         video[0].pause();
         video[0].currentTime = 0;
-        playBtn.toggleClass('sf sfd');
+        playBtn.find('.play').removeClass('hidden');
+        playBtn.find('.pause').addClass('hidden');
         seek.removeClass('sdff');
     })
 });
