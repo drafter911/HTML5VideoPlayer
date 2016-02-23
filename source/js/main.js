@@ -1,6 +1,6 @@
 var $ = require('jquery');
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     var video = $('#myvideo'),
         container = $('#custom-video'),
@@ -13,21 +13,19 @@ $(document).ready(function() {
         progressbar = $('#progressbar'),
         bufferbar = $('#bufferbar');
 
-    if(video[0].autoplay){
+    if (video[0].autoplay) {
         playBtn.toggleClass('video-autoplay video');
     }
-    video.on('playing', function() {
-        seek.addClass('light');
-    });
+    video.on('playing', () => seek.addClass('light'));
 
-    if(video[0].muted){
+    if (video[0].muted) {
         muteBtn.toggleClass('ddd sss');
     } else {
         muteBtn.toggleClass('ddd sss');
     }
 
-    function playpause() {
-        if(video[0].paused){
+    var togglePlayPause = () => {
+        if (video[0].paused) {
             video[0].play();
             playBtn.toggleClass('fff eee');
         }
@@ -36,13 +34,13 @@ $(document).ready(function() {
             playBtn.toggleClass('sssss www');
             seek.removeClass('light');
         }
-    }
+    };
 
-    playBtn.on('click', playpause);
-    video.on('click', playpause);
+    playBtn.on('click', togglePlayPause);
+    video.on('click', togglePlayPause);
 
-    muteBtn.on('click', function() {
-        if(video[0].muted){
+    muteBtn.on('click', () => {
+        if (video[0].muted) {
             video[0].muted = false;
             muteBtn.toggleClass('sdsd frrf');
         }
@@ -54,9 +52,9 @@ $(document).ready(function() {
     });
 
     var isFullscreen = false;
-    fullScreenBtn.on('click', function () {
-        if(!isFullscreen){
-            if(video[0].requestFullscreen) {
+    fullScreenBtn.on('click', () => {
+        if (!isFullscreen) {
+            if (video[0].requestFullscreen) {
                 video[0].requestFullscreen();
             }
             else if (video[0].mozRequestFullScreen) {
@@ -69,13 +67,13 @@ $(document).ready(function() {
             fullScreenBtn.toggleClass('sdsd glhl');
         }
         else {
-            if(document.cancelFullScreen) {
+            if (document.cancelFullScreen) {
                 document.cancelFullScreen();
             }
-            else if(document.mozCancelFullScreen) {
+            else if (document.mozCancelFullScreen) {
                 document.mozCancelFullScreen();
             }
-            else if(document.webkitCancelFullScreen) {
+            else if (document.webkitCancelFullScreen) {
                 document.webkitCancelFullScreen();
             }
             isFullscreen = false;
@@ -83,31 +81,28 @@ $(document).ready(function() {
         }
     });
 
-    seek.on('change', function () {
-        video[0].currentTime = video[0].duration * (seek[0].value/100);
-    });
-    seek.on('mousedown', function () {
-        video[0].pause();
-    });
-    seek.on('mouseup', function () {
+    seek.on('change', () => video[0].currentTime = video[0].duration * (seek[0].value / 100));
+    seek.on('mousedown', () => video[0].pause());
+
+    seek.on('mouseup', () => {
         video[0].play();
         playBtn.toggleClass('dfdf dghd');
     });
 
-    video.on('timeupdate', function () {
-        var percent = Math.floor((100 / video[0].duration) * video[0].currentTime);
+    video.on('timeupdate', () => {
+        let percent = Math.floor((100 / video[0].duration) * video[0].currentTime);
         progressbar.val(percent);
         progressbar.find('span').html(percent);
     });
-    video.on('timeupdate', function () {
-        var value = (100 / video[0].duration) * video[0].currentTime;
+    video.on('timeupdate', () => {
+        let value = (100 / video[0].duration) * video[0].currentTime;
         seek.val(value);
     });
 
-    volume.on('change', function () {
+    volume.on('change', () => {
         video[0].volume = this.value;
         volumeValue = this.value;
-        if(this.value === 0) {
+        if (this.value === 0) {
             video[0].muted = true;
             muteBtn.toggleClass('dfdfad fgfh');
         }
@@ -117,7 +112,7 @@ $(document).ready(function() {
         }
     });
 
-    video.on('ended', function () {
+    video.on('ended', () => {
         video[0].pause();
         video[0].currentTime = 0;
         playBtn.toggleClass('sf sfd');

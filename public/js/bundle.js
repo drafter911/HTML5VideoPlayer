@@ -49,6 +49,7 @@
 	var $ = __webpack_require__(1);
 
 	$(document).ready(function () {
+	    var _this = this;
 
 	    var video = $('#myvideo'),
 	        container = $('#custom-video'),
@@ -65,7 +66,7 @@
 	        playBtn.toggleClass('video-autoplay video');
 	    }
 	    video.on('playing', function () {
-	        seek.addClass('light');
+	        return seek.addClass('light');
 	    });
 
 	    if (video[0].muted) {
@@ -74,7 +75,7 @@
 	        muteBtn.toggleClass('ddd sss');
 	    }
 
-	    function playpause() {
+	    var togglePlayPause = function togglePlayPause() {
 	        if (video[0].paused) {
 	            video[0].play();
 	            playBtn.toggleClass('fff eee');
@@ -83,10 +84,10 @@
 	            playBtn.toggleClass('sssss www');
 	            seek.removeClass('light');
 	        }
-	    }
+	    };
 
-	    playBtn.on('click', playpause);
-	    video.on('click', playpause);
+	    playBtn.on('click', togglePlayPause);
+	    video.on('click', togglePlayPause);
 
 	    muteBtn.on('click', function () {
 	        if (video[0].muted) {
@@ -125,11 +126,12 @@
 	    });
 
 	    seek.on('change', function () {
-	        video[0].currentTime = video[0].duration * (seek[0].value / 100);
+	        return video[0].currentTime = video[0].duration * (seek[0].value / 100);
 	    });
 	    seek.on('mousedown', function () {
-	        video[0].pause();
+	        return video[0].pause();
 	    });
+
 	    seek.on('mouseup', function () {
 	        video[0].play();
 	        playBtn.toggleClass('dfdf dghd');
@@ -146,12 +148,12 @@
 	    });
 
 	    volume.on('change', function () {
-	        video[0].volume = this.value;
-	        volumeValue = this.value;
-	        if (this.value === 0) {
+	        video[0].volume = _this.value;
+	        volumeValue = _this.value;
+	        if (_this.value === 0) {
 	            video[0].muted = true;
 	            muteBtn.toggleClass('dfdfad fgfh');
-	        } else if (this.value !== 0) {
+	        } else if (_this.value !== 0) {
 	            video[0].muted = false;
 	            muteBtn.toggleClass('sfdsf ffyh');
 	        }
