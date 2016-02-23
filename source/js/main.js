@@ -2,15 +2,15 @@ var $ = require('jquery');
 
 $(document).ready(function () {
 
-    var video = $('#myvideo'),
-        container = $('#custom-video'),
-        playBtn = $('#playpause'),
+    var video = $('#custom-video'),
+        container = $('#video-player'),
+        playBtn = $('#play-pause'),
         muteBtn = $('#mute'),
-        fullScreenBtn = $('#fullscreen'),
-        seek = $('#seekbar'),
-        volume = $('#volumebar'),
+        fullScreenBtn = $('#full-screen'),
+        seek = $('#seek-bar'),
+        volume = $('#volume-bar'),
         volumeValue = volume.value,
-        progressbar = $('#progressbar'),
+        progressbar = $('#progress-bar'),
         bufferbar = $('#bufferbar');
 
     if (video[0].autoplay) {

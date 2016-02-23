@@ -51,15 +51,15 @@
 	$(document).ready(function () {
 	    var _this = this;
 
-	    var video = $('#myvideo'),
-	        container = $('#custom-video'),
-	        playBtn = $('#playpause'),
+	    var video = $('#custom-video'),
+	        container = $('#video-player'),
+	        playBtn = $('#play-pause'),
 	        muteBtn = $('#mute'),
-	        fullScreenBtn = $('#fullscreen'),
-	        seek = $('#seekbar'),
-	        volume = $('#volumebar'),
+	        fullScreenBtn = $('#full-screen'),
+	        seek = $('#seek-bar'),
+	        volume = $('#volume-bar'),
 	        volumeValue = volume.value,
-	        progressbar = $('#progressbar'),
+	        progressbar = $('#progress-bar'),
 	        bufferbar = $('#bufferbar');
 
 	    if (video[0].autoplay) {
@@ -78,10 +78,10 @@
 	    var togglePlayPause = function togglePlayPause() {
 	        if (video[0].paused) {
 	            video[0].play();
-	            playBtn.toggleClass('fff eee');
+	            playBtn.toggleClass('toggle-play-pause');
 	        } else {
 	            video[0].pause();
-	            playBtn.toggleClass('sssss www');
+	            playBtn.toggleClass('toggle-play-pause');
 	            seek.removeClass('light');
 	        }
 	    };
