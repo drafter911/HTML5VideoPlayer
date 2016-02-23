@@ -1,3 +1,6 @@
+$seek-width: calc(100% - 160px);
+$volume-width: 50px;
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,29 +11,37 @@ video::-webkit-media-controls-enclosure {
   display: none !important;
 }
 
-#custom-controls {
-  margin-top: 10px;
-  z-index: 2147483647;
+.player-wrapper {
+  margin: 100px 0;
+  font-size: 0;
+  text-align: center;
 }
 
-.player-wrapper {
-  text-align: center;
-  margin-top: 100px;
+#custom-controls {
+  width: calc(100% - 10px);
+  height: 40px;
+  bottom: 45px;
+  left: 5px;
+  padding: 10px;
+  z-index: 2147483647;
+  border-radius: 10px;
+  background: white;
+  opacity: 0;
+  &:hover {
+    opacity: .6;
+  }
+  &.fool-screen {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
 }
 
 #play-pause {
   width: 20px;
   height: 20px;
   background-color: #f0f0f0;
-}
-
-.toggle-play-pause {
-  .play {
-    display: none;
-  }
-  .pause {
-    display: block;
-  }
 }
 
 .play, .pause, .play-ico, .pause-ico {
@@ -44,25 +55,76 @@ video::-webkit-media-controls-enclosure {
 }
 
 .pause {
-  display: none;
   font-size: 0;
   .pause-ico {
     width: 6px;
     margin: 0 2px;
-    background-color: red;
+    background-color: black;
   }
 }
 
 .seeker {
-  width: calc(100% - 20px);
+  width: $seek-width;
+  height: 100%;
+  margin: 0 10px;
+}
+
+#mute {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  .speaker-part1 {
+    top: 50%;
+    left: 5px;
+    width: 2px;
+    height: 6px;
+    margin-top: -3px;
+    background: black;
+  }
+  .speaker-part2 {
+    top: 50%;
+    left: 7px;
+    width: 8px;
+    height: 14px;
+    margin-top: -7px;
+    border-top: 4px solid white;
+    border-right: 6px solid black;
+    border-bottom: 4px solid white;
+    background: black;
+  }
+  .speaker-mute {
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 2px;
+    margin: -1px 0 0 -8px;
+    transform: rotate(135deg);
+    background: #c0392b;
+  }
+}
+
+.volume {
+  width: $volume-width;
+  height: 100%;
+  .volume-bar {
+    width: 100%;
+  }
+}
+
+#full-screen {
+  width: 30px;
+  height: 20px;
+  margin-left: 10px;
 }
 
 .progress-bar {
   @include appearance(none);
   top: 50%;
-  width: calc(100% - 20px);
+  left: 0;
+  width: 100%;
   height: 4px;
   margin-top: -2px;
+  border-radius: 2px;
 }
 
 .progress-bar::-moz-progress-bar {
@@ -70,7 +132,7 @@ video::-webkit-media-controls-enclosure {
 }
 
 .progress-bar::-webkit-progress-bar {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 0, 255, 0.1);
 }
 
 .progress-bar::-webkit-progress-value {
@@ -79,18 +141,19 @@ video::-webkit-media-controls-enclosure {
 
 .seek-bar {
   z-index: 3;
-  position: relative;
-  width: calc(100% - 20px);
+  width: 100%;
   background-color: transparent !important;
 }
 
 input[type=range] {
   @include appearance(none);
+  top: 50%;
+  left: 0;
   border-radius: 2px;
-  vertical-align: middle;
-  background-color: rgba(255, 255, 255, 0.7);
-  width: calc(100% - 20px);
+  background-color: #c0392b;
+  width: 100%;
   height: 4px;
+  margin-top: -2px;
   border: none;
   cursor: pointer;
 }
@@ -98,40 +161,38 @@ input[type=range] {
 input[type=range]::-moz-range-track {
   vertical-align: middle;
   border-radius: 2px;
-  background-color: rgba(255, 255, 255, 0.7);
+  //background-color: rgba(255, 255, 255, 0.7);
   -moz-appearance: none;
-  background-color: white;
+  //background-color: red;
   height: 4px;
-  width: calc(100% - 20px);
+  width: 100%;
   cursor: pointer;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
-  width: calc(100% - 20px);
+  width: 100%;
   height: 4px;
 }
 
 input[type=range]::-moz-range-thumb {
-  border-radius: 50%;
-  height: 8px;
-  width: 8px;
+  border-radius: 2px;
+  height: 10px;
+  width: 4px;
+  margin-top: -3px;
   background-color: black;
   border: 0;
 }
 
 input[type=range]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  border-radius: 50%;
-  height: 8px;
-  width: 8px;
+  border-radius: 2px;
+  height: 10px;
+  width: 4px;
+  margin-top: -3px;
   background-color: black;
   border: 0;
 }
 
 input[type=range].light::-webkit-slider-thumb {
-  box-shadow: 0 0 8px 2px white;
-}
-
-input[type=range]:active::-moz-range-track {
-  background: orange;
+  box-shadow: 0 0 10px 2px white;
 }

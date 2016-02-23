@@ -19,40 +19,28 @@ $(document).ready(function () {
     video.on('playing', () => seek.addClass('light'));
 
     if (video[0].muted) {
-        muteBtn.toggleClass('ddd sss');
+        muteBtn.find('.speaker-mute').removeClass('hidden');
     } else {
-        muteBtn.toggleClass('ddd sss');
+        muteBtn.find('.speaker-mute').addClass('hidden');
     }
 
     var togglePlayPause = () => {
         if (video[0].paused) {
             video[0].play();
-            playBtn.toggleClass('fff eee');
+            playBtn.find('.pause').removeClass('hidden');
+            playBtn.find('.play').addClass('hidden');
         }
         else {
             video[0].pause();
-            playBtn.toggleClass('sssss www');
+            playBtn.find('.play').removeClass('hidden');
+            playBtn.find('.pause').addClass('hidden');
             seek.removeClass('light');
         }
     };
 
-    playBtn.on('click', togglePlayPause);
-    video.on('click', togglePlayPause);
-
-    muteBtn.on('click', () => {
-        if (video[0].muted) {
-            video[0].muted = false;
-            muteBtn.toggleClass('sdsd frrf');
-        }
-        else {
-            video[0].muted = true;
-            volume[0].value = 0;
-            muteBtn.toggleClass('sddd dsfdsf');
-        }
-    });
-
     var isFullscreen = false;
-    fullScreenBtn.on('click', () => {
+
+    var toggleFullScreen = () => {
         if (!isFullscreen) {
             if (video[0].requestFullscreen) {
                 video[0].requestFullscreen();
@@ -64,7 +52,8 @@ $(document).ready(function () {
                 video[0].webkitRequestFullscreen();
             }
             isFullscreen = true;
-            fullScreenBtn.toggleClass('sdsd glhl');
+            fullScreenBtn.find('.corner').addClass('minimize');
+            $('#custom-controls').addClass('fool-screen');
         }
         else {
             if (document.cancelFullScreen) {
@@ -77,7 +66,31 @@ $(document).ready(function () {
                 document.webkitCancelFullScreen();
             }
             isFullscreen = false;
-            fullScreenBtn.toggleClass('sfesf ghn');
+            fullScreenBtn.find('.corner').removeClass('minimize');
+            $('#custom-controls').removeClass('fool-screen');
+        }
+    };
+
+    playBtn.on('click', togglePlayPause);
+    video.on('click', togglePlayPause);
+
+    muteBtn.on('click', () => {
+        if (video[0].muted) {
+            video[0].muted = false;
+            muteBtn.find('.speaker-mute').addClass('hidden');
+        }
+        else {
+            video[0].muted = true;
+            volume[0].value = 0;
+            muteBtn.find('.speaker-mute').removeClass('hidden');
+        }
+    });
+
+    fullScreenBtn.on('click', toggleFullScreen);
+
+    $(document).keyup((e) => {
+        if (e.keyCode == 27) { // escape key maps to keycode `27`
+            toggleFullScreen();
         }
     });
 
