@@ -1,0 +1,20 @@
+//@import "partials/cssReset.scss";
+//@import "partials/stickyFooter.scss";
+//@import "partials/fonts.scss";
+@import "partials/variables.scss";
+//@import "partials/mixins.scss";
+//@import "partials/common.scss";
+@import "partials/global.scss";
+//@import "partials/fancyCheckbox.scss";
+
+@media
+only screen and (max-width: $media-small-screen - 1px),
+only screen and (max-width: $media-small-screen) and (orientation: landscape){
+  @import "media/phone.scss";
+}
+
+@media
+only screen and (min-width: $media-small-screen) and (max-width: $media-medium-screen - 1px) and (orientation: portrait) ,
+only screen and (min-width: $media-small-screen + 1px) and (max-width: $media-medium-landscape-screen) and (orientation: landscape) {
+  @import 'media/tablet.scss';
+}
