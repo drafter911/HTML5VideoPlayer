@@ -1,0 +1,17 @@
+[
+  {
+    "id": "1",
+    "title": "Test video 1",
+    "url": "http://www.w3schools.com/html/movie.mp4"
+  },
+  {
+    "id": "2",
+    "title": "Test video 2",
+    "url": "http://www.w3schools.com/html/mov_bbb.mp4"
+  },
+  {
+    "id": "3",
+    "title": "Test video 3",
+    "url": "https://media.w3.org/2010/05/sintel/trailer.mp4"
+  }
+]

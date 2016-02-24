@@ -47,11 +47,11 @@
 	'use strict';
 
 	var $ = __webpack_require__(1);
-	var Player = __webpack_require__(2);
-	var player = new Player('text');
 
 	$(document).ready(function () {
-	    player.play();
+	    var Player = __webpack_require__(2);
+	    var player = new Player('text');
+	    player.play(5000, false);
 	});
 
 /***/ },
@@ -67,9 +67,11 @@
 	'use strict';
 
 	var $ = __webpack_require__(1);
+	var arr = ['http://www.w3schools.com/html/movie.mp4', 'http://www.w3schools.com/html/mov_bbb.mp4', 'https://media.w3.org/2010/05/sintel/trailer.mp4'];
+	var i = 0;
 	var Player = function Player() {};
 
-	Player.prototype.play = function () {
+	Player.prototype.play = function (timeout, autoPlay) {
 	    var video = $('#custom-video'),
 	        container = $('#video-player'),
 	        playBtn = $('#play-pause'),
@@ -78,29 +80,13 @@
 	        seek = $('#seek-bar'),
 	        volume = $('#volume-bar'),
 	        volumeValue = volume.value,
-	        progressbar = $('#progress-bar');
+	        progressbar = $('#progress-bar'),
+	        isFullscreen = false;
 
 	    var loadVideo = function loadVideo(src) {
 	        video.find('source').attr('src', src);
 	        video.find('source').load();
-	        video[0].play();
 	    };
-
-	    var loopVideo = function loopVideo(array) {
-	        for (var link in array) {
-	            console.log(link);
-	            loadVideo(link);
-	        }
-	    };
-
-	    setTimeout(loopVideo.bind(loopVideo, ['http://www.w3schools.com/html/movie.mp4', 'http://www.w3schools.com/html/mov_bbb.mp4'], 5000));
-
-	    if (video[0].autoplay) {
-	        playBtn.toggleClass('video-autoplay video');
-	    }
-	    video.on('playing', function () {
-	        return seek.addClass('light');
-	    });
 
 	    var togglePlayPause = function togglePlayPause() {
 	        if (video[0].paused) {
@@ -115,8 +101,6 @@
 	        }
 	    };
 
-	    var isFullscreen = false;
-
 	    var toggleFullScreen = function toggleFullScreen() {
 	        if (!isFullscreen) {
 	            if (video[0].requestFullscreen) {
@@ -128,7 +112,7 @@
 	            }
 	            isFullscreen = true;
 	            fullScreenBtn.find('.corner').addClass('minimize');
-	            $('#custom-controls').addClass('fool-screen');
+	            video.next().addClass('fool-screen');
 	        } else {
 	            if (document.cancelFullScreen) {
 	                document.cancelFullScreen();
@@ -139,12 +123,29 @@
 	            }
 	            isFullscreen = false;
 	            fullScreenBtn.find('.corner').removeClass('minimize');
-	            $('#custom-controls').removeClass('fool-screen');
+	            video.next().removeClass('fool-screen');
 	        }
 	    };
 
+	    video.on('playing', function () {
+	        return seek.addClass('light');
+	    });
+
 	    playBtn.on('click', togglePlayPause);
+
 	    video.on('click', togglePlayPause);
+
+	    seek.on('change', function () {
+	        return video[0].currentTime = video[0].duration * (seek[0].value / 100);
+	    });
+
+	    seek.on('mousedown', function () {
+	        return video[0].pause();
+	    });
+
+	    seek.on('mouseup', function () {
+	        return video[0].play();
+	    });
 
 	    muteBtn.on('click', function () {
 	        if (video[0].muted) {
@@ -165,18 +166,6 @@
 	        if (e.keyCode == 27) {
 	            toggleFullScreen();
 	        }
-	    });
-
-	    seek.on('change', function () {
-	        return video[0].currentTime = video[0].duration * (seek[0].value / 100);
-	    });
-	    seek.on('mousedown', function () {
-	        return video[0].pause();
-	    });
-
-	    seek.on('mouseup', function () {
-	        video[0].play();
-	        playBtn.toggleClass('dfdf dghd');
 	    });
 
 	    video.on('timeupdate', function () {
@@ -206,8 +195,35 @@
 	        video[0].currentTime = 0;
 	        playBtn.find('.play').removeClass('hidden');
 	        playBtn.find('.pause').addClass('hidden');
-	        seek.removeClass('sdff');
+	        i++;
+	        if (i >= arr.length) {
+	            i = 0;
+	        }
+	        video.find('source').attr('src', arr[i]);
+	        video[0].load();
+	        var time = timeout * 0.001;
+	        container.append('<div id="preloader">' + time + '<div></div></div>');
+	        function pl() {
+	            $('#preloader').html('<div></div>' + (time - 1));
+	            --time;
+	            console.log(this);
+	        }
+
+	        var preloader = setInterval(pl, 1000);
+
+	        setTimeout(function () {
+	            video[0].play();
+	            clearInterval(preloader);
+	            $('#preloader').remove();
+	        }, timeout);
 	    });
+
+	    loadVideo(arr[i]);
+	    if (autoPlay) {
+	        video[0].play();
+	        playBtn.find('.pause').removeClass('hidden');
+	        playBtn.find('.play').addClass('hidden');
+	    }
 	};
 
 	module.exports = Player;

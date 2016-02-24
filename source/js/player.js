@@ -1,8 +1,12 @@
 var $ = require('jquery');
+var arr = ['http://www.w3schools.com/html/movie.mp4',
+    'http://www.w3schools.com/html/mov_bbb.mp4',
+    'https://media.w3.org/2010/05/sintel/trailer.mp4'];
+var i = 0;
 var Player = () => {
 };
 
-Player.prototype.play = () => {
+Player.prototype.play = (timeout, autoPlay) => {
     var video = $('#custom-video'),
         container = $('#video-player'),
         playBtn = $('#play-pause'),
@@ -11,29 +15,15 @@ Player.prototype.play = () => {
         seek = $('#seek-bar'),
         volume = $('#volume-bar'),
         volumeValue = volume.value,
-        progressbar = $('#progress-bar');
+        progressbar = $('#progress-bar'),
+        isFullscreen = false;
+
 
     var loadVideo = (src) => {
         video.find('source').attr('src', src);
         video.find('source').load();
-        video[0].play();
+
     };
-
-    var loopVideo = (array) => {
-        for (var link in array) {
-            console.log(link);
-            loadVideo(link);
-        }
-    };
-
-    setTimeout(loopVideo.bind(this, ['http://www.w3schools.com/html/movie.mp4',
-        'http://www.w3schools.com/html/mov_bbb.mp4'], 50000));
-
-    if (video[0].autoplay) {
-        playBtn.toggleClass('video-autoplay video');
-    }
-    video.on('playing', () => seek.addClass('light'));
-
 
     var togglePlayPause = () => {
         if (video[0].paused) {
@@ -49,8 +39,6 @@ Player.prototype.play = () => {
         }
     };
 
-    var isFullscreen = false;
-
     var toggleFullScreen = () => {
         if (!isFullscreen) {
             if (video[0].requestFullscreen) {
@@ -64,7 +52,7 @@ Player.prototype.play = () => {
             }
             isFullscreen = true;
             fullScreenBtn.find('.corner').addClass('minimize');
-            $('#custom-controls').addClass('fool-screen');
+            video.next().addClass('fool-screen');
         }
         else {
             if (document.cancelFullScreen) {
@@ -78,12 +66,21 @@ Player.prototype.play = () => {
             }
             isFullscreen = false;
             fullScreenBtn.find('.corner').removeClass('minimize');
-            $('#custom-controls').removeClass('fool-screen');
+            video.next().removeClass('fool-screen');
         }
     };
 
+    video.on('playing', () => seek.addClass('light'));
+
     playBtn.on('click', togglePlayPause);
+
     video.on('click', togglePlayPause);
+
+    seek.on('change', () => video[0].currentTime = video[0].duration * (seek[0].value / 100));
+
+    seek.on('mousedown', () => video[0].pause());
+
+    seek.on('mouseup', () => video[0].play());
 
     muteBtn.on('click', () => {
         if (video[0].muted) {
@@ -105,14 +102,6 @@ Player.prototype.play = () => {
         if (e.keyCode == 27) {
             toggleFullScreen();
         }
-    });
-
-    seek.on('change', () => video[0].currentTime = video[0].duration * (seek[0].value / 100));
-    seek.on('mousedown', () => video[0].pause());
-
-    seek.on('mouseup', () => {
-        video[0].play();
-        playBtn.toggleClass('dfdf dghd');
     });
 
     video.on('timeupdate', () => {
@@ -143,8 +132,36 @@ Player.prototype.play = () => {
         video[0].currentTime = 0;
         playBtn.find('.play').removeClass('hidden');
         playBtn.find('.pause').addClass('hidden');
-        seek.removeClass('sdff');
+        i++;
+        if (i >= arr.length) {
+            i = 0;
+        }
+        video.find('source').attr('src', arr[i]);
+        video[0].load();
+        var time = timeout * 0.001;
+        container.append('<div id="preloader">' + time + '<div></div></div>');
+        function pl() {
+            $('#preloader').html('<div></div>' + (time - 1));
+            --time;
+            console.log(this);
+        }
+
+        var preloader = setInterval(pl, 1000);
+
+        setTimeout(function () {
+            video[0].play();
+            clearInterval(preloader);
+            $('#preloader').remove();
+        }, timeout);
+
     });
+
+    loadVideo(arr[i]);
+    if (autoPlay) {
+        video[0].play();
+        playBtn.find('.pause').removeClass('hidden');
+        playBtn.find('.play').addClass('hidden');
+    }
 };
 
 module.exports = Player;
