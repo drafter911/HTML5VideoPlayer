@@ -25,8 +25,6 @@ Player.prototype.play = (data, timeout, autoPlay) => {
             container.parent('div').append('<h4 class="title">' + src.title + '</h4>');
         }
         video[0].load();
-        //video.find('source').load();
-
     };
 
     var togglePlayPause = () => {
