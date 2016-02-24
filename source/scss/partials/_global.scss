@@ -106,7 +106,7 @@ video::-webkit-media-controls-enclosure {
     height: 2px;
     margin: -1px 0 0 -8px;
     transform: rotate(135deg);
-    background: #c0392b;
+    background: $red;
   }
 }
 
@@ -143,7 +143,7 @@ video::-webkit-media-controls-enclosure {
 }
 
 .progress-bar::-webkit-progress-value {
-  background: #c0392b;
+  background: $red;
 }
 
 .seek-bar {
@@ -157,7 +157,7 @@ input[type=range] {
   top: 50%;
   left: 0;
   border-radius: 2px;
-  background-color: #c0392b;
+  background-color: $red;
   width: 100%;
   height: 4px;
   margin-top: -2px;
