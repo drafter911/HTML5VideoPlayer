@@ -33,25 +33,45 @@
     width: 45%;
     height: 45%;
     border-width: 5px;
+    &:hover {
+      width: 40%;
+      height: 40%;
+    }
   }
 }
 
 .corner-top {
   top: 0;
-  border-top: 2px solid black;
+  border-top: 2px solid $black;
 }
 
 .corner-right {
   right: 0;
-  border-right: 2px solid black;
+  border-right: 2px solid $black;
 }
 
 .corner-bottom {
   bottom: 0;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid $black;
 }
 
 .corner-left {
   left: 0;
-  border-left: 2px solid black;
+  border-left: 2px solid $black;
+}
+
+.icon-full-screen-alt {
+  &:hover {
+    .corner {
+      &.minimize {
+        width: 49%;
+        height: 49%;
+        border-width: 6px;
+      }
+    }
+  }
+}
+
+.title {
+  font-size: 24px;
 }

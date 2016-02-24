@@ -51,7 +51,17 @@
 	$(document).ready(function () {
 	    var Player = __webpack_require__(2);
 	    var player = new Player('text');
-	    player.play(5000, false);
+		var xhr = $.ajax({
+			url: 'https://raw.githubusercontent.com/drafter911/HTML5VideoPlayer/master/jsonTestFiles/video.json'
+		});
+
+		xhr.always(function (data) {
+			player.play(JSON.parse(data), 5000, true);
+
+			//  where is data - server response
+			//  5000 - timeout between video
+			//  true - is video starts automaticaly
+		});
 	});
 
 /***/ },
@@ -67,25 +77,30 @@
 	'use strict';
 
 	var $ = __webpack_require__(1);
-	var arr = ['http://www.w3schools.com/html/movie.mp4', 'http://www.w3schools.com/html/mov_bbb.mp4', 'https://media.w3.org/2010/05/sintel/trailer.mp4'];
 	var i = 0;
 	var Player = function Player() {};
 
-	Player.prototype.play = function (timeout, autoPlay) {
+		Player.prototype.play = function (data, timeout, autoPlay) {
 	    var video = $('#custom-video'),
 	        container = $('#video-player'),
 	        playBtn = $('#play-pause'),
 	        muteBtn = $('#mute'),
 	        fullScreenBtn = $('#full-screen'),
 	        seek = $('#seek-bar'),
+			progressbar = $('#progress-bar'),
 	        volume = $('#volume-bar'),
 	        volumeValue = volume.value,
-	        progressbar = $('#progress-bar'),
-	        isFullscreen = false;
+			isFullScreen = false;
 
-	    var loadVideo = function loadVideo(src) {
-	        video.find('source').attr('src', src);
-	        video.find('source').load();
+			var loadVideo = function loadVideo(src, isTitleTagExist) {
+				video.html('<source src="' + src.url + '" type="' + src.videoType + '">');
+				if (isTitleTagExist) {
+					container.parent('div').find('.title').html(src.title);
+				} else {
+					container.parent('div').append('<h4 class="title">' + src.title + '</h4>');
+				}
+				video[0].load();
+				//video.find('source').load();
 	    };
 
 	    var togglePlayPause = function togglePlayPause() {
@@ -102,7 +117,7 @@
 	    };
 
 	    var toggleFullScreen = function toggleFullScreen() {
-	        if (!isFullscreen) {
+			if (!isFullScreen) {
 	            if (video[0].requestFullscreen) {
 	                video[0].requestFullscreen();
 	            } else if (video[0].mozRequestFullScreen) {
@@ -110,7 +125,7 @@
 	            } else if (video[0].webkitRequestFullscreen) {
 	                video[0].webkitRequestFullscreen();
 	            }
-	            isFullscreen = true;
+				isFullScreen = true;
 	            fullScreenBtn.find('.corner').addClass('minimize');
 	            video.next().addClass('fool-screen');
 	        } else {
@@ -121,7 +136,7 @@
 	            } else if (document.webkitCancelFullScreen) {
 	                document.webkitCancelFullScreen();
 	            }
-	            isFullscreen = false;
+				isFullScreen = false;
 	            fullScreenBtn.find('.corner').removeClass('minimize');
 	            video.next().removeClass('fool-screen');
 	        }
@@ -169,6 +184,11 @@
 	    });
 
 	    video.on('timeupdate', function () {
+			var value = 100 / video[0].duration * video[0].currentTime;
+			seek.val(value);
+		});
+
+			video.on('timeupdate', function () {
 	        var percent = Math.floor(100 / video[0].duration * video[0].currentTime);
 	        progressbar.val(percent);
 	        progressbar.find('span').html(percent);
@@ -193,20 +213,19 @@
 	    video.on('ended', function () {
 	        video[0].pause();
 	        video[0].currentTime = 0;
+
 	        playBtn.find('.play').removeClass('hidden');
 	        playBtn.find('.pause').addClass('hidden');
-	        i++;
-	        if (i >= arr.length) {
-	            i = 0;
-	        }
-	        video.find('source').attr('src', arr[i]);
-	        video[0].load();
+
+			i >= data.length ? i = 0 : i++;
+
+			loadVideo(data[i], true);
+
 	        var time = timeout * 0.001;
 	        container.append('<div id="preloader">' + time + '<div></div></div>');
 	        function pl() {
 	            $('#preloader').html('<div></div>' + (time - 1));
 	            --time;
-	            console.log(this);
 	        }
 
 	        var preloader = setInterval(pl, 1000);
@@ -218,7 +237,10 @@
 	        }, timeout);
 	    });
 
-	    loadVideo(arr[i]);
+			if (data[i].hasOwnProperty('url') && data[i].hasOwnProperty('videoType')) {
+				loadVideo(data[i], false);
+			}
+
 	    if (autoPlay) {
 	        video[0].play();
 	        playBtn.find('.pause').removeClass('hidden');
